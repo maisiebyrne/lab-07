@@ -108,28 +108,38 @@ ggplot(score_bty_aug, mapping = aes(x= .fitted, y = .resid)) +
 0. Look at the variable rank, and determine the frequency of each category level.
 
 ```{r}
-# ... 
+count(evals, rank)
+# number of intructors by rank
 ```
 
 1. Fit a new linear model called `score_rank_fit` to predict average professor evaluation `score` based on `rank` of the professor.
 
 ```{r fit-score_rank_fit}
-# fit model
+score_rank_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ rank, data = evals)
 
-# tidy model output
+#tidy
+tidy(score_rank_fit)
+
 ```
 
-*Add your narrative here.*
+*The intercept means that the average score for an intructor who is neither tenure track or tenured is expected to be 4.284 on average, the slope means that when an instructor is tenured or tenured track, their score is expected to fall by 0.13 and 0.15 respectively on average.*
 
 2. Fit a new linear model called `score_gender_fit` to predict average professor evaluation `score` based on `gender` of the professor. 
 
 ```{r fit-score_gender_fit}
 # fit model
+score_gender_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ gender, data = evals)
 
-# tidy model output
+#tidy model output
+tidy(score_gender_fit)
+
 ```
 
-```{r score_gender_intercept, eval=FALSE}
+```{r score_gender_intercept}
 # remove eval = FALSE from the code chunk options
 score_gender_intercept <- tidy(score_gender_fit) %>% 
   filter(term == "(Intercept)") %>%
@@ -145,7 +155,7 @@ score_gender_slope <- tidy(score_gender_fit) %>%
   pull()
 ```
 
-*Add your narrative here. Use in-line code!*
+*The intercept of the model is `r round(score_gender_intercept, 2)`.*
 
 # Exercise 4: Multiple linear regression
 
