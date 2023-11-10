@@ -163,11 +163,15 @@ score_gender_slope <- tidy(score_gender_fit) %>%
 
 ```{r fit-score_bty_gender_fit}
 # fit model
+score_bty_gender_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ bty_avg + gender, data = evals)
 
-# tidy model output
+#tidy model output
+tidy(score_bty_gender_fit)
 ```
 
-*Add your narrative here.*
+*The slope-beauty average means that all else held constant, for each increase in the average beauty rating, we would expect the score to be higher, on average, by 0.074. The slope-gender means that all else held constant, when the gender is male, we would expect the score to be higher, on average, by 0172. The intercept means that for instructors that are not male, and have a beauty average of 0, the expected score is 3.75 on average.*
 
 ```{r eval = FALSE}
 ggplot(___) + ...
