@@ -45,57 +45,63 @@ evals %>%
     geom_jitter()
 ```
 
-*jitter means overlapping scatter points are moved slightly to show all points. The initia scatter plot makes it appear like less people voted.*
+*jitter means overlapping scatter points are moved slightly to show all points. The initial scatter plot makes it appear like less people voted.*
 
 # Exercise 2: Simple Linear regression with a numerical predictor
 
 1. Fit a linear model called `score_bty_fit` to predict average professor evaluation `score` from average beauty rating (`bty_avg`). Print the regression output using `tidy()`.
 
-```{r fit-score_bty_fit, eval = FALSE}
+```{r fit-score_bty_fit}
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(___ ~ ___, data = ___)
+  fit(score ~ bty_avg, data = evals)
 ```
 
-```{r tidy-score_bty_fit, eval = FALSE}
+```{r tidy-score_bty_fit}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-tidy(___)
+tidy(score_bty_fit)
 ```
 
-*Add your linear model here. Don't worry too much about notation, you can use things like score-hat.*
+*Linear model is: score-hat = 3.88 + 0.067(bty_avg)*
 
 2. Plot the data again using `geom_jitter()`, and add the regression line.
 
 ```{r viz-score_bty_fit,eval=FALSE}
-# add your plot here. Hint, you can add the regression line using geom_smooth()
+evals %>% 
+  ggplot(mapping = aes(x = score, y = bty_avg)) +
+    geom_jitter() +
+  geom_smooth(method = "lm")
 ```
 
 3. Interpret the slope of the linear model in context of the data.
 
-*Add your interpretation here*
+*The slope shows that for each 0.1 increase in the bty_avg (beauty average), the score the instructor recieved is expected to increase by 0.67 on average.*
 
 4. Interpret the intercept of the linear model in context of the data. Comment on whether or not the intercept makes sense in this context.
 
-*Add your interpretation here*
+*The intercept means that instructors who recieved an average beauty rating of 0 are expected to get a score of 3.88 on average. This intercept does not really make sense, as none of the instructors recieved an average beauty rating of 0.*
 
 5. Determine the $R^2$ of the model and interpret it in the context of the data.
 
-```{r R2, eval = FALSE}
+```{r R2}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-glance(___)$___
+glance(score_bty_fit)$adj.r.squared
 ```
 
-*Add your interpretation here*
+*There R^2 value is far from 1, which implies there is a very weak correlation between average beauty rating and the overall score for the instructor. This said, studies that try to explain human behavior generally have R^2 values less than 0.5*
 
 6. Make a plot of residuals vs. predicted values for the model above.
 
-```{r viz-score_bty_fit-diagnostic, eval = FALSE}
+```{r viz-score_bty_fit-diagnostic}
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_aug <- augment(score_bty_fit$fit)
 
-ggplot(___) + ...
+ggplot(score_bty_aug, mapping = aes(x= .fitted, y = .resid)) + 
+  geom_jitter(alpha = 0.5) +
+  geom_hline(yintercept = 0, colour = "gray", lty = "dashed")
 ```
+*A linear model is possibly inappropriate as there appears to be some correlation / grouping between the predicted values and the residuals.*
 
 # Exercise 3: Simple Linear regression with a categorical predictor
 
